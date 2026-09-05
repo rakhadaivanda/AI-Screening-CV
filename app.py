@@ -10,23 +10,44 @@ api_key = os.getenv("GROQ_API_KEY", "")
 
 # ── Konfigurasi Halaman ──────────────────────────────────────────
 st.set_page_config(
-    page_title="AI CV Screener",
-    page_icon="🤖",
+    page_title="CareerFit - CV Analyzer",
+    page_icon="✨",
     layout="centered"
 )
 
+# ── Custom CSS ───────────────────────────────────────────────────
+st.markdown("""
+<style>
+    /* Sembunyikan UI default Streamlit */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Layout styling minimalis */
+    .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    /* Sembunyikan avatar icon bawaan streamlit untuk chat */
+    .stChatMessageAvatar {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # ── Sidebar ──────────────────────────────────────────────────────
 with st.sidebar:
-    st.title("⚙️ Pengaturan")
-    st.subheader("📄 Upload CV")
-    uploaded_file = st.file_uploader("Upload CV (PDF / TXT)", type=["pdf", "txt"])
+    st.title("Pengaturan")
+    st.subheader("Upload Dokumen")
+    uploaded_file = st.file_uploader("Pilih CV (PDF / TXT)", type=["pdf", "txt"])
 
     st.divider()
-    st.caption("Cara pakai:\n1. Upload CV (PDF/TXT) di atas\n2. Ketik pengalaman atau pertanyaan Anda\n3. Kirim pesan ke chatbot")
+    st.caption("Panduan:\n1. Upload file CV Anda di atas\n2. Ketik posisi yang diminati atau ceritakan pengalaman Anda\n3. Biarkan sistem menganalisis kecocokannya")
 
 # ── Judul ────────────────────────────────────────────────────────
-st.title("🤖 AI CV Screening Chatbot")
-st.caption("Analisis CV Anda & temukan lowongan LinkedIn yang paling cocok")
+st.markdown("<h1 style='text-align: center; font-weight: 600; color: #2E3B4E; font-size: 2.5rem; margin-bottom: 0;'>CareerFit</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #666666; font-size: 1.1rem;'>Analisis CV Anda & temukan peran LinkedIn yang paling relevan</p>", unsafe_allow_html=True)
+st.divider()
 
 # ── Baca CV ──────────────────────────────────────────────────────
 cv_text = ""
@@ -62,12 +83,12 @@ if "messages" not in st.session_state:
         {
             "role": "assistant",
             "content": (
-                "👋 Halo! Saya **AI CV Screener** berbasis Groq AI.\n\n"
-                "Saya bisa:\n"
-                "- 📄 Menganalisis CV Anda\n"
-                "- 🔍 Merekomendasikan lowongan LinkedIn yang cocok\n"
-                "- 📊 Memberikan **persentase kecocokan** & alasannya\n\n"
-                "Silakan **upload CV** di sidebar atau ceritakan pengalaman Anda!"
+                "Selamat datang di **CareerFit**.\n\n"
+                "Sistem ini dirancang secara khusus untuk:\n"
+                "- Menganalisis profil dan pengalaman pada CV Anda\n"
+                "- Merekomendasikan peran pekerjaan yang relevan di LinkedIn\n"
+                "- Memberikan metrik kecocokan objektif beserta alasannya\n\n"
+                "Silakan unggah dokumen CV Anda melalui sidebar atau ceritakan profil Anda untuk memulai."
             )
         }
     ]
