@@ -11,29 +11,28 @@ api_key = os.getenv("GROQ_API_KEY", "")
 # ── Konfigurasi Halaman ──────────────────────────────────────────
 st.set_page_config(
     page_title="CareerFit - CV Analyzer",
-    page_icon="✨",
     layout="centered"
 )
 
 # ── Custom CSS ───────────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* Sembunyikan UI default Streamlit */
+    
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Layout styling minimalis */
+    
     .block-container {
         padding-top: 2rem !important;
         padding-bottom: 2rem !important;
     }
-    /* Sembunyikan avatar icon bawaan streamlit untuk chat */
+
     .stChatMessageAvatar {
         display: none;
     }
     
-    /* Pertegas garis tabel */
+
     table {
         border-collapse: collapse !important;
         width: 100% !important;
@@ -72,7 +71,7 @@ if uploaded_file:
             cv_text = "\n".join(page.extract_text() or "" for page in pdf.pages)
     else:
         cv_text = uploaded_file.read().decode("utf-8", errors="ignore")
-    st.success(f"✅ CV berhasil dibaca: **{uploaded_file.name}**")
+    st.success(f"CV berhasil dibaca: **{uploaded_file.name}**")
 
 # ── System Prompt ─────────────────────────────────────────────────
 from datetime import datetime
@@ -85,10 +84,10 @@ SYSTEM_PROMPT = f"""Kamu adalah AI CV Screener & Career Advisor. Tugasmu:
    - PENTING: JANGAN mengarang (berhalusinasi) tentang lowongan spesifik dari perusahaan tertentu yang seolah-olah sedang buka saat ini, karena kamu tidak memiliki akses internet real-time.
    - Fokus berikan rekomendasi POSISI PEKERJAAN secara umum yang cocok dengan profil pengguna.
 3. Untuk setiap rekomendasi posisi, berikan:
-   - 💼 Nama Posisi (contoh: QA Engineer, Data Analyst)
-   - 📊 Persentase kecocokan dengan CV (contoh: 87%)
-   - ✅ Alasan SANGAT SINGKAT (MAKSIMAL 15 KATA / 1 KALIMAT) mengapa skill/pengalaman di CV cocok
-   - 🔗 Link Pencarian LinkedIn: https://www.linkedin.com/jobs/search/?keywords=NAMA+POSISI&location=Indonesia (Ganti NAMA+POSISI dengan posisi yang disarankan, format URL encoding)
+   - Nama Posisi (contoh: QA Engineer, Data Analyst)
+   - Persentase kecocokan dengan CV (contoh: 87%)
+   - Alasan SANGAT SINGKAT (MAKSIMAL 15 KATA / 1 KALIMAT) mengapa skill/pengalaman di CV cocok
+   - Link Pencarian LinkedIn: https://www.linkedin.com/jobs/search/?keywords=NAMA+POSISI&location=Indonesia (Ganti NAMA+POSISI dengan posisi yang disarankan, format URL encoding)
 
 Format jawaban WAJIB MENGGUNAKAN TABEL MARKDOWN agar sangat rapi. Jawab dalam Bahasa Indonesia."""
 
@@ -110,7 +109,7 @@ if "messages" not in st.session_state:
 
 # ── Tampilkan Riwayat ─────────────────────────────────────────────
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
+    with st.chat_message(msg["role"], avatar="CF" if msg["role"] == "assistant" else "U"):
         st.markdown(msg["content"])
 
 # ── Input Chat ────────────────────────────────────────────────────
@@ -118,12 +117,12 @@ user_input = st.chat_input("Ceritakan pengalaman/skill Anda, atau minta rekomend
 
 if user_input:
     if not api_key:
-        st.warning("⚠️ Masukkan Groq API Key di sidebar terlebih dahulu.")
+        st.warning("Masukkan Groq API Key di sidebar terlebih dahulu.")
         st.stop()
 
     # Tampilkan pesan user
     st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="U"):
         st.markdown(user_input)
 
     # Gabungkan CV jika ada
@@ -141,8 +140,8 @@ if user_input:
     try:
         client = Groq(api_key=api_key)
 
-        with st.chat_message("assistant"):
-            with st.spinner("🔍 Menganalisis CV & mencari lowongan..."):
+        with st.chat_message("assistant", avatar="CF"):
+            with st.spinner("Menganalisis CV & mencari lowongan..."):
                 response = client.chat.completions.create(
                     model="openai/gpt-oss-120b",
                     messages=history,
@@ -155,4 +154,4 @@ if user_input:
         st.session_state.messages.append({"role": "assistant", "content": reply})
 
     except Exception as e:
-        st.error(f"❌ Error: {e}")
+        st.error(f"Error: {e}")
