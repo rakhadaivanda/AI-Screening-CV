@@ -32,6 +32,21 @@ st.markdown("""
     .stChatMessageAvatar {
         display: none;
     }
+    
+    /* Pertegas garis tabel */
+    table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+    }
+    th, td {
+        border: 1px solid #D3D3D3 !important;
+        padding: 10px !important;
+        color: #1A1A1A !important;
+    }
+    th {
+        background-color: #F0F2F6 !important;
+        font-weight: bold !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -45,8 +60,8 @@ with st.sidebar:
     st.caption("Panduan:\n1. Upload file CV Anda di atas\n2. Ketik posisi yang diminati atau ceritakan pengalaman Anda\n3. Biarkan sistem menganalisis kecocokannya")
 
 # ── Judul ────────────────────────────────────────────────────────
-st.markdown("<h1 style='text-align: center; font-weight: 600; color: #2E3B4E; font-size: 2.5rem; margin-bottom: 0;'>CareerFit</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #666666; font-size: 1.1rem;'>Analisis CV Anda & temukan peran LinkedIn yang paling relevan</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; font-weight: bold; color: #111111; font-size: 2.5rem; margin-bottom: 0;'>CareerFit</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #333333; font-size: 1.1rem;'>Analisis CV Anda & temukan peran LinkedIn yang paling relevan</p>", unsafe_allow_html=True)
 st.divider()
 
 # ── Baca CV ──────────────────────────────────────────────────────
@@ -72,10 +87,10 @@ SYSTEM_PROMPT = f"""Kamu adalah AI CV Screener & Career Advisor. Tugasmu:
 3. Untuk setiap rekomendasi posisi, berikan:
    - 💼 Nama Posisi (contoh: QA Engineer, Data Analyst)
    - 📊 Persentase kecocokan dengan CV (contoh: 87%)
-   - ✅ Alasan singkat mengapa skill/pengalaman di CV sangat cocok untuk posisi ini
-   - 🔗 Link Pencarian LinkedIn: https://www.linkedin.com/jobs/search/?keywords=NAMA+POSISI&location=Indonesia (Ganti NAMA+POSISI dengan posisi yang disarankan, gunakan format URL encoding seperti %20 atau + untuk spasi)
+   - ✅ Alasan SANGAT SINGKAT (MAKSIMAL 15 KATA / 1 KALIMAT) mengapa skill/pengalaman di CV cocok
+   - 🔗 Link Pencarian LinkedIn: https://www.linkedin.com/jobs/search/?keywords=NAMA+POSISI&location=Indonesia (Ganti NAMA+POSISI dengan posisi yang disarankan, format URL encoding)
 
-Format rapi menggunakan markdown. Jawab dalam Bahasa Indonesia."""
+Format jawaban WAJIB MENGGUNAKAN TABEL MARKDOWN agar sangat rapi. Jawab dalam Bahasa Indonesia."""
 
 # ── Inisialisasi Riwayat Chat ─────────────────────────────────────
 if "messages" not in st.session_state:
