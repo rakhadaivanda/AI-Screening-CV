@@ -28,8 +28,9 @@ st.markdown("""
         padding-bottom: 2rem !important;
     }
 
-    .stChatMessageAvatar {
-        display: none;
+    /* Sembunyikan avatar icon bawaan streamlit untuk chat */
+    [data-testid^="stChatMessageAvatar"] {
+        display: none !important;
     }
     
 
@@ -109,7 +110,7 @@ if "messages" not in st.session_state:
 
 # ── Tampilkan Riwayat ─────────────────────────────────────────────
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"], avatar="CF" if msg["role"] == "assistant" else "U"):
+    with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
 # ── Input Chat ────────────────────────────────────────────────────
@@ -122,7 +123,7 @@ if user_input:
 
     # Tampilkan pesan user
     st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user", avatar="U"):
+    with st.chat_message("user"):
         st.markdown(user_input)
 
     # Gabungkan CV jika ada
@@ -140,7 +141,7 @@ if user_input:
     try:
         client = Groq(api_key=api_key)
 
-        with st.chat_message("assistant", avatar="CF"):
+        with st.chat_message("assistant"):
             with st.spinner("Menganalisis CV & mencari lowongan..."):
                 response = client.chat.completions.create(
                     model="openai/gpt-oss-120b",
